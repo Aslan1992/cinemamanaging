@@ -1,10 +1,13 @@
 package com.epam.cinema.config;
 
-import com.epam.cinema.dao.FilmEventDao;
-import com.epam.cinema.dao.impl.FilmEventDaoImpl;
-import com.epam.cinema.domain.FilmEvent;
-import com.epam.cinema.service.FilmEventService;
-import com.epam.cinema.service.impl.FilmEventServiceImpl;
+import com.epam.cinema.dao.EventDao;
+import com.epam.cinema.dao.FilmDao;
+import com.epam.cinema.dao.impl.EventDaoImpl;
+import com.epam.cinema.dao.impl.FilmDaoImpl;
+import com.epam.cinema.service.EventService;
+import com.epam.cinema.service.FilmService;
+import com.epam.cinema.service.impl.EventServiceImpl;
+import com.epam.cinema.service.impl.FilmServiceImpl;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,8 +38,8 @@ public class RootApplicationContextConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-//        sessionFactory.setPackagesToScan(new String[]{"com.epam.cinema.domain"});
-        sessionFactory.setAnnotatedClasses(FilmEvent.class);
+        sessionFactory.setPackagesToScan(new String[]{"com.epam.cinema.domain"});
+//        sessionFactory.setAnnotatedClasses(FilmEvent.class, FilmInfo.class);
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
@@ -49,17 +52,31 @@ public class RootApplicationContextConfig {
     }
 
     @Bean
-    public FilmEventDao filmEventDao() {
-        FilmEventDaoImpl filmEventDao = new FilmEventDaoImpl();
-        filmEventDao.setSessionFactory(sessionFactory().getObject());
-        return filmEventDao;
+    public EventDao eventDao() {
+        EventDaoImpl eventDao = new EventDaoImpl();
+        eventDao.setSessionFactory(sessionFactory().getObject());
+        return eventDao;
     }
 
     @Bean
-    public FilmEventService filmEventService() {
-        FilmEventServiceImpl filmEventService = new FilmEventServiceImpl();
-        filmEventService.setFilmEventDao(filmEventDao());
-        return filmEventService;
+    public EventService eventService() {
+        EventServiceImpl eventService = new EventServiceImpl();
+        eventService.setEventDao(eventDao());
+        return eventService;
+    }
+
+    @Bean
+    public FilmDao filmDao() {
+        FilmDaoImpl filmDao = new FilmDaoImpl();
+        filmDao.setSessionFactory(sessionFactory().getObject());
+        return filmDao;
+    }
+
+    @Bean
+    public FilmService filmService() {
+        FilmServiceImpl filmService = new FilmServiceImpl();
+        filmService.setFilmDao(filmDao());
+        return filmService;
     }
 
     private Properties hibernateProperties() {

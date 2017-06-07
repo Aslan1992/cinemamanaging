@@ -1,11 +1,11 @@
 package com.epam.cinema.controller;
 
-import com.epam.cinema.domain.FilmEvent;
+import com.epam.cinema.domain.Event;
 import com.epam.cinema.domain.util.LocalDateEditor;
 import com.epam.cinema.domain.util.LocalTimeEditor;
-import com.epam.cinema.service.FilmEventService;
+import com.epam.cinema.service.EventService;
+import com.epam.cinema.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -19,7 +19,19 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    private FilmEventService filmEventService;
+    private EventService eventService;
+
+    private FilmService filmService;
+
+    @Autowired
+    public void setEventService(EventService eventService) {
+        this.eventService = eventService;
+    }
+
+    @Autowired
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @InitBinder
     public void dataBinding(WebDataBinder binder) {
@@ -27,40 +39,34 @@ public class AdminController {
         binder.registerCustomEditor(LocalTime.class, "time", new LocalTimeEditor());
     }
 
-    @Autowired(required = true)
-    @Qualifier(value = "filmEventService")
-    public void setFilmEventService(FilmEventService filmEventService) {
-        this.filmEventService = filmEventService;
-    }
-
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String adminPage(Model model) {
-        model.addAttribute("gretting", "Administration page");
-        model.addAttribute("filmEvents", filmEventService.getAll());
-        model.addAttribute("filmEvent", new FilmEvent());
+        model.addAttribute("events", eventService.getAll());
+        model.addAttribute("films", filmService.getAll());
+        model.addAttribute("event", new Event());
         return "admin";
     }
 
     @RequestMapping(value = "/admin/addNewEvent", method = RequestMethod.POST)
-    public String addNewEvent(@ModelAttribute("filmEvent") FilmEvent filmEvent) {
-        filmEventService.add(filmEvent);
+    public String addNewEvent(@ModelAttribute("event") Event event) {
+        eventService.add(event);
         return "redirect:/admin";
     }
 
     @RequestMapping(value = "/admin/getEventById", method = RequestMethod.GET)
     public String getEventById(@RequestParam Long eventId, Model model) {
-        List<FilmEvent> filmEvents = new ArrayList<>();
+        List<Event> filmEvents = new ArrayList<>();
         if (eventId != null) {
-            filmEvents.add(filmEventService.getById(eventId));
-            model.addAttribute("filmEvents", filmEvents);
-            model.addAttribute("filmEvent", new FilmEvent());
+            filmEvents.add(eventService.getById(eventId));
+            model.addAttribute("events", filmEvents);
+            model.addAttribute("event", new Event());
         }
         return "admin";
     }
 
     @RequestMapping("/admin/remove/{id}")
     public String removeEventById(@PathVariable Long id) {
-        filmEventService.remove(id);
+        eventService.remove(id);
         return "redirect:/admin";
     }
 }

@@ -1,8 +1,8 @@
 package com.epam.cinema.dao;
 
 import com.epam.cinema.config.RootApplicationContextConfig;
-import com.epam.cinema.dao.impl.FilmEventDaoImpl;
-import com.epam.cinema.service.impl.FilmEventServiceImpl;
+import com.epam.cinema.dao.impl.EventDaoImpl;
+import com.epam.cinema.service.impl.EventServiceImpl;
 import org.junit.Test;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
@@ -12,9 +12,9 @@ public class CinemaEventDaoTest {
     public void addDataToCinemaEvent() {
         RootApplicationContextConfig config = new RootApplicationContextConfig();
         LocalSessionFactoryBean sessionFactory = config.sessionFactory();
-        FilmEventDaoImpl cinemaEventDao = new FilmEventDaoImpl();
+        EventDaoImpl cinemaEventDao = new EventDaoImpl();
         cinemaEventDao.setSessionFactory(sessionFactory.getObject());
-        FilmEventServiceImpl service = new FilmEventServiceImpl();
+        EventServiceImpl service = new EventServiceImpl();
 
     }
 }
