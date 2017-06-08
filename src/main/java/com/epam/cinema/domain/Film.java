@@ -1,12 +1,6 @@
 package com.epam.cinema.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.sql.Blob;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "film")
@@ -24,7 +18,7 @@ public class Film {
     private String genre;
 
     @Column(name = "image")
-    private Blob image;
+    private byte[] image;
 
     public Long getId() {
         return id;
@@ -50,11 +44,11 @@ public class Film {
         this.genre = genre;
     }
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 }

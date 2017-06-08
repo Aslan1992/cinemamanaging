@@ -24,4 +24,10 @@ public class FilmDaoImpl implements FilmDao {
         List<Film> filmInfos = session.createQuery("from Film").list();
         return filmInfos;
     }
+
+    @Override
+    public void add(Film film) {
+        Session session = this.sessionFactory.getCurrentSession();
+        session.persist(film);
+    }
 }

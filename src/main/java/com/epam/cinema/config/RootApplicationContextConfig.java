@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -77,6 +78,13 @@ public class RootApplicationContextConfig {
         FilmServiceImpl filmService = new FilmServiceImpl();
         filmService.setFilmDao(filmDao());
         return filmService;
+    }
+
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(100000);
+        return new CommonsMultipartResolver();
     }
 
     private Properties hibernateProperties() {

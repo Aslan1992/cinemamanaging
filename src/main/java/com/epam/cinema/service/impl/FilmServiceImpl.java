@@ -22,4 +22,10 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getAll() {
         return filmDao.getAll();
     }
+
+    @Override
+    @Transactional
+    public void add(Film film) {
+        filmDao.add(film);
+    }
 }

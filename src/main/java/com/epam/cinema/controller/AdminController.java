@@ -1,6 +1,7 @@
 package com.epam.cinema.controller;
 
 import com.epam.cinema.domain.Event;
+import com.epam.cinema.domain.Film;
 import com.epam.cinema.domain.util.LocalDateEditor;
 import com.epam.cinema.domain.util.LocalTimeEditor;
 import com.epam.cinema.service.EventService;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public class AdminController {
         model.addAttribute("events", eventService.getAll());
         model.addAttribute("films", filmService.getAll());
         model.addAttribute("event", new Event());
+        model.addAttribute("film", new Film());
         return "admin";
     }
 
@@ -67,6 +71,14 @@ public class AdminController {
     @RequestMapping("/admin/remove/{id}")
     public String removeEventById(@PathVariable Long id) {
         eventService.remove(id);
+        return "redirect:/admin";
+    }
+
+    @RequestMapping(value = "/admin/addNewFilm", method = RequestMethod.POST)
+    public String addNewFilm(@ModelAttribute("film") Film film,
+                             @RequestParam("imageFile") MultipartFile image) throws IOException {
+        film.setImage(image.getBytes());
+        filmService.add(film);
         return "redirect:/admin";
     }
 }
